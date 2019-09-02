@@ -1,0 +1,28 @@
+function main() {
+
+	var campaigns = AdsApp.campaigns()
+	/* Qui mettere il nome della campagna o della condizione di naming da monitorare.
+	Referenze per le varie condizioni utilizzabili: */
+	.withCondition("Name CONTAINS 'XXX'")
+	// Qui l'arco temporale.
+	.forDateRange("ALL_TIME");
+
+	var campaignIterator = campaigns.get();
+
+	while (campaignIterator.hasNext()) {
+	var campaign = campaignIterator.next();
+	var campaignName = campaign.getName();
+	// Qui sotto inserire il budget della campagna.
+	var budgetAmount = 2000;
+	var totalCost = campaign.getStatsFor("ALL_TIME").getCost();
+
+		if(totalCost > budgetAmount) {
+		Logger.log(campaignName + " ha speso " + totalCost + " ed è stata fermata");
+		campaign.pause();
+		// Qui sotto mettere ricevente, oggetto e testo della mail di notifica.
+		MailApp.sendEmail("indirizzo@provider.it", "Oggetto Mail", "Testo Mail.");
+		} else {
+		Logger.log(campaignName + " ha speso " + totalCost + " e può continuare.");
+		}
+	}
+}
